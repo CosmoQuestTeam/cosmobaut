@@ -6,8 +6,8 @@ import os
 import random
 from utils import dataset_util
 
-TRAINING_OUTPUT_PATH = "../config/train.record"
-EVALUATION_OUTPUT_PATH = "../config/eval.record"
+TRAINING_OUTPUT_PATH = "config/train.record"
+EVALUATION_OUTPUT_PATH = "config/eval.record"
 ALL_DATA_FILES = ["images/1/sub_image_data.json",
                   "images/WAC_GLOBAL_E300N0450_100M/sub_image_data.json",
                   "images/WAC_GLOBAL_E300N1350_100M/sub_image_data.json",
@@ -48,12 +48,18 @@ for image in image_data:
 
         for crater in image["craters"]:
             # The bounding box coordinates need to be a percent relative to the size of the image
-            x_mins.append(max(0, crater["left"] / image["width"]))
-            x_maxes.append(min(1, crater["right"] / image["width"]))
-            y_mins.append(max(0, crater["top"] / image["height"]))
-            y_maxes.append(min(1, crater["bottom"] / image["height"]))
-            classes_text.append(b'crater')
-            classes.append(1)
+            left = max(0, crater["left"] / image["width"])
+            right = min(1, crater["right"] / image["width"])
+            top = max(0, crater["top"] / image["height"])
+            bottom = min(1, crater["bottom"] / image["height"])
+            # The network gets confused if the objects are too small
+            if right - left >= .01 and bottom - top >= .01:
+                x_mins.append(left)
+                x_maxes.append(right)
+                y_mins.append(top)
+                y_maxes.append(bottom)
+                classes_text.append(b'crater')
+                classes.append(1)
 
         training_data = tensorflow.train.Example(features=tensorflow.train.Features(feature={
             'image/width': dataset_util.int64_feature(image["width"]),

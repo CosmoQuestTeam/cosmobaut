@@ -104,8 +104,8 @@ class ImageSlicer:
             if (
                     bounding_box.left < crater["x"] < bounding_box.right and
                     bounding_box.top < crater["y"] < bounding_box.bottom
-                    and 8 < crater["width"] < bounding_box.width * 3/4
-                    and 8 < crater["height"] < bounding_box.height * 3/4):
+                    and 10 < crater["width"] < bounding_box.width * 3/4
+                    and 10 < crater["height"] < bounding_box.height * 3/4):
                 new_crater = {"left": max(0, round(crater["x"] - bounding_box.left - crater["width"] / 2, 1)),
                               "top": max(0, round(crater["y"] - bounding_box.top - crater["height"] / 2, 1)),
                               "right": min(bounding_box.width, round(crater["x"] - bounding_box.left + crater["width"] / 2, 1)),

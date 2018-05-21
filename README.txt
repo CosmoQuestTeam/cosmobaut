@@ -29,7 +29,7 @@ to your TRAINING_OUTPUT_PATH and EVALUATION_OUTPUT_PATH
  >vim config/cosmoquest-trainer.config
 
 Run training. This can take a long time. You want the loss to be pretty consistently under 1. The more consistent, the better. This can take 100000 iterations or more.
- >python train.py --logtostderr --train_dir=cosmoquest/training --pipeline_config_path=cosmoquest/config/cosmoquest-trainer.config
+ >python train.py --logtostderr --train_dir=training --pipeline_config_path=config/cosmoquest-trainer.config
 
 Run evaluation
  >python eval.py --logtostderr --eval_dir=cosmoquest/eval --pipeline_config_path=cosmoquest/config/cosmoquest-trainer.config --checkpoint_dir="cosmoquest/training"

@@ -9,12 +9,12 @@ from utils import label_map_util
 from utils import visualization_utils as vis_util
 
 
-IMAGE_DIRECTORY = "cosmoquest/test_images/test_images/"
-OUTPUT_DIRECTORY = 'cosmoquest/test_images/test_images/verify/'
+IMAGE_DIRECTORY = "test_images/"
+OUTPUT_DIRECTORY = 'test_images/verify/'
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-PATH_TO_CKPT = 'cosmoquest/training/frozen_graph/frozen_inference_graph.pb'
+PATH_TO_CKPT = 'training/frozen_graph/frozen_inference_graph.pb'
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = 'cosmoquest/config/object_labels.pbtxt'
+PATH_TO_LABELS = 'config/object_labels.pbtxt'
 
 # This is needed since the notebook is stored in the object_detection folder.
 sys.path.append("..")
@@ -123,7 +123,6 @@ for image_path in image_paths:
     output_dict = run_inference_for_single_image(image_np, detection_graph)
 
     scores = np.squeeze(output_dict['detection_scores'])
-    boxes = np.squeeze(output_dict['detection_scores'])
     box_list = []
     for i in range(len(scores)):
         if scores[i] > 0.5:

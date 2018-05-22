@@ -1,3 +1,12 @@
+>pip install mysql-python Pillow
+In another directory
+>git clone https://github.com/tensorflow/models.git
+>cd models/research
+>protoc object_detection/protos/*.proto --python_out=.
+>export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+You should also edit your ~/.profile and add the above line to the end of it so that it runs when you log in
+
+
 This is a multi-step process. In order to identify objects in an image, you need to:
 1. Slice a large image up into multiple smaller sub-images. By default these are 450x450px.
 2. Create a JSON file that stores the crater positions within each sub-image.
@@ -15,7 +24,7 @@ to each sub-image, and find all of the provided craters that fit in that sub-ima
  >python image_slicer.py --image_file=images/WAC_GLOBAL_E300N0450_100M.png --coordinates=0,0,90,90 --craters_file=stuart_moon_craters.csv
 
 If you want to create a JSON file for rafaelg's data, which is pulled from a database, use:
- >create_db_training_data.py
+ >python create_db_training_data.py
 
 Modify the ALL_DATA_FILES variable in create_training_data.py to reference all of your json files,
 and the TRAINING_OUTPUT_PATH and EVALUATION_OUTPUT_PATH if you want.
@@ -32,10 +41,10 @@ Run training. This can take a long time. You want the loss to be pretty consiste
  >python train.py --logtostderr --train_dir=training --pipeline_config_path=config/cosmoquest-trainer.config
 
 Run evaluation
- >python eval.py --logtostderr --eval_dir=cosmoquest/eval --pipeline_config_path=cosmoquest/config/cosmoquest-trainer.config --checkpoint_dir="cosmoquest/training"
+ >python eval.py --logtostderr --eval_dir=eval --pipeline_config_path=config/cosmoquest-trainer.config --checkpoint_dir="training"
 
 In order to run the Neural Network on an image, you need to freeze a version of the network
- >python export_inference_graph.py --input_type image_tensor --pipeline_config_path=cosmoquest\config\cosmoquest-trainer.config --trained_checkpoint_prefix=cosmoquest\training\model.ckpt-7767 --output_directory=cosmoquest\training\frozen_graph
+ >python export_inference_graph.py --input_type image_tensor --pipeline_config_path=config/cosmoquest-trainer.config --trained_checkpoint_prefix=training/model.ckpt-7767 --output_directory=training/frozen_graph
 
 Modify IMAGE_DIRECTORY and OUTPUT_DIRECTORY in find_craters_in_image.py to point to the directory holding your images and where you want the output to be saved.
  >vim find_craters_in_image.py
@@ -47,4 +56,14 @@ Find the craters in a set of images
 
 Note that object_detection is a clone of the research/object_detection directory in https://github.com/tensorflow/models.git
 
+If you want to try a different neural network arrangement, try using config/cosmoquest-trainer.config, or modify any network in object_detection/samples/configs/.
+
+
+
+Potential errors:
+
+If:
+ImportError: cannot import name 'preprocessor_pb2'
+Then:
+ >protoc object_detection/protos/*.proto --python_out=.
 If you want to try a different neural network arrangement, try using config/cosmoquest-trainer.config, or modify any network in object_detection/samples/configs/.
